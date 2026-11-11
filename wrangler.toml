@@ -1,4 +1,4 @@
-name = "cobranzas"
+name = "gestion-prestamos"
 main = "src/worker.js"
 compatibility_date = "2025-06-01"
 
