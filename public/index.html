@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6750a4">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Gestión de Préstamos</title>
+  <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar" id="menu" aria-label="Navegación">
+      <button class="menu-btn" data-clic="alternarMenu" aria-label="Menú"><svg class="ico" aria-hidden="true">
+          <use href="/icons/sprite.svg#i-menu" />
+        </svg></button>
+      <button class="nav-item nav-nuevo solo-admin" data-clic="irA:nuevo"><svg class="ico" aria-hidden="true">
+          <use href="/icons/sprite.svg#i-add" />
+        </svg><span class="etq">Nuevo préstamo</span></button>
+      <button class="nav-item solo-admin" data-vista="resumen" data-clic="irA:resumen"><svg class="ico"
+          aria-hidden="true">
+          <use href="/icons/sprite.svg#i-home" />
+        </svg><span class="etq">Resumen</span></button>
+      <button class="nav-item solo-admin" data-vista="prestamos" data-clic="irA:prestamos"><svg class="ico"
+          aria-hidden="true">
+          <use href="/icons/sprite.svg#i-people" />
+        </svg><span class="etq">Préstamos</span></button>
+      <button class="nav-item solo-cliente" data-vista="cliente" data-clic="irA:cliente"><svg class="ico"
+          aria-hidden="true">
+          <use href="/icons/sprite.svg#i-cuenta" />
+        </svg><span class="etq">Mi cuenta</span></button>
+      <div class="espaciador"></div>
+      <button class="nav-item solo-admin" data-vista="config" data-clic="irA:config"><svg class="ico"
+          aria-hidden="true">
+          <use href="/icons/sprite.svg#i-settings" />
+        </svg><span class="etq">Configuración</span></button>
+      <button class="nav-item" data-clic="abrirAcerca"><svg class="ico" aria-hidden="true">
+          <use href="/icons/sprite.svg#i-info" />
+        </svg><span class="etq">Acerca de</span></button>
+      <button class="nav-item" data-clic="salir"><svg class="ico" aria-hidden="true">
+          <use href="/icons/sprite.svg#i-salir" />
+        </svg><span class="etq">Cerrar sesión</span></button>
+    </aside>
+    <div class="scrim" data-clic="cerrarMenu"></div>
+    <div class="contenido">
+      <header class="app-bar">
+        <button class="menu-btn" data-clic="alternarMenu" aria-label="Menú"><svg class="ico" aria-hidden="true">
+            <use href="/icons/sprite.svg#i-menu" />
+          </svg></button>
+        <h1 id="titulo">Resumen</h1>
+        <span id="sync" class="sync"></span>
+        <span id="hoy"></span>
+      </header>
+      <main>
+        <div class="vista" id="vista-resumen">
+          <div class="stats" id="hoyCards"></div>
+          <section id="cobrosHoy"></section>
+          <section id="pagosHoy"></section>
+          <h2 class="cartera">Cartera</h2>
+          <div class="stats" id="stats"></div>
+        </div>
+        <div class="vista" id="vista-prestamos" hidden>
+          <div class="tarjetas" id="lista"></div>
+          <section id="detalle" style="display:none"></section>
+        </div>
+        <div class="vista" id="vista-nuevo" hidden>
+          <section>
+            <div class="grid">
+              <div><label>Nombre del deudor</label><input id="nombre" autocomplete="off" autocapitalize="words"></div>
+              <div><label>Teléfono</label><input id="tel" type="tel"></div>
+              <div><label>Dirección</label><input id="dir"></div>
+              <div><label>Monto (Bs.)</label><input id="monto" type="number" min="0" step="any" value="100"
+                  data-input="previews"></div>
+              <div><label>Interés (%)</label><input id="interes" type="number" min="0" step="any" value="20"
+                  data-input="previews"></div>
+            </div>
+            <div class="grid" id="planN"></div>
+            <div id="previewN"></div>
+            <div class="row"><button data-clic="crearPrestamo">Guardar préstamo</button></div>
+          </section>
+        </div>
+        <div class="vista" id="vista-config" hidden>
+          <section>
+            <h2>Tema</h2>
+            <div class="temas" id="temas"></div>
+            <div class="segmentos" id="modos"></div>
+          </section>
+          <section>
+            <h2>Datos</h2>
+            <div class="row">
+              <button data-clic="exportarDatos"><svg class="ico" aria-hidden="true">
+                  <use href="/icons/sprite.svg#i-download" />
+                </svg> Exportar</button>
+              <button class="sec" data-clic="elegirArchivo"><svg class="ico" aria-hidden="true">
+                  <use href="/icons/sprite.svg#i-upload" />
+                </svg> Importar</button>
+              <button class="del" data-clic="borrarTodo"><svg class="ico" aria-hidden="true">
+                  <use href="/icons/sprite.svg#i-borrar" />
+                </svg> Borrar todo</button>
+            </div>
+            <input type="file" id="archivo" accept="application/json,.json" hidden>
+          </section>
+        </div>
+        <div class="vista" id="vista-cliente" hidden>
+          <div id="cuentaCliente"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="acceso" id="acceso" hidden></div>
+  <div class="modal" id="modal" hidden data-clic="cerrarModal" data-fondo></div>
+  <pre id="comprobante"></pre>
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+
+</html>
