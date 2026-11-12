@@ -18,7 +18,7 @@ export const CONFIG_KEY = 'cobros_config';
 
 export const APP = {
   nombre: 'Gestión de Préstamos',
-  version: '1.0.0',
+  version: '1.0.1',
   autor: 'Zuki',
   web: 'https://zuki.zip',
   github: 'https://github.com/wykron',

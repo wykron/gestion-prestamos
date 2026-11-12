@@ -262,9 +262,16 @@ function grupoCliente(lista) {
 export function vistaClientes() {
   const visibles = estado.loans.filter((l) => !etapaPrevia(l));
   if (!visibles.length) return '<span class="mut">Sin préstamos.</span>';
-  const grupos = new Map();
-  visibles.forEach((l) => grupos.set(l.codigo, [...(grupos.get(l.codigo) || []), l]));
-  return [...grupos.values()].map((lista) => (lista.filter(esActivo).length >= 2 ? grupoCliente(lista) : lista.map((l) => tarjetaPrestamo(l, true)).join(''))).join('');
+  const porDeudor = new Map();
+  visibles.forEach((l) => porDeudor.set(l.codigo, [...(porDeudor.get(l.codigo) || []), l]));
+  const individuales = [];
+  const agrupados = [];
+  porDeudor.forEach((lista) => {
+    if (lista.filter(esActivo).length >= 2) agrupados.push(grupoCliente(lista));
+    else lista.forEach((l) => individuales.push(tarjetaPrestamo(l, true)));
+  });
+  return (individuales.length ? '<div class="tarjetas">' + individuales.join('') + '</div>' : '') +
+    (agrupados.length ? '<div class="grupos">' + agrupados.join('') + '</div>' : '');
 }
 
 export function alternarGrupo(codigo) {
