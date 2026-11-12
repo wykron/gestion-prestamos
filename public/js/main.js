@@ -43,7 +43,7 @@ async function iniciar() {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', aplicarTema);
   document.body.classList.toggle('menu-abierto', window.innerWidth >= 800);
   ajustaModo('n');
-  const previa = restaurarSesion();
+  const previa = await restaurarSesion();
   if (previa) await iniciarSesion(previa);
   else mostrarAcceso();
 }

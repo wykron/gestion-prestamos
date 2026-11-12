@@ -11,7 +11,6 @@ const MAX_CLAVE = 200;
 const codificador = new TextEncoder();
 const aBase64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));
 const desdeBase64 = (texto) => Uint8Array.from(atob(texto), (c) => c.charCodeAt(0));
-const desdeBase64Url = (texto) => desdeBase64(texto.replace(/-/g, '+').replace(/_/g, '/'));
 
 export const normalizarCodigo = (texto) => String(texto ?? '').trim().toUpperCase();
 
@@ -23,20 +22,10 @@ export function validarEntrada(rol, valor) {
   return CODIGO.test(normalizarCodigo(valor)) ? '' : 'El código debe tener de 4 a 12 letras o números.';
 }
 
-export function leerToken(token) {
-  try {
-    const carga = JSON.parse(new TextDecoder().decode(desdeBase64Url(String(token).split('.')[0])));
-    return carga && typeof carga === 'object' ? carga : null;
-  } catch (e) {
-    return null;
-  }
-}
-
-export function sesionDesdeToken(token) {
-  const carga = leerToken(token);
-  if (!carga || !ROLES.includes(carga.rol) || !Number.isFinite(carga.exp) || carga.exp * 1000 <= Date.now()) return null;
-  if (carga.rol === 'deudor' && !CODIGO.test(String(carga.codigo))) return null;
-  return { token, rol: carga.rol, exp: carga.exp, ...(carga.rol === 'deudor' ? { codigo: carga.codigo } : {}) };
+export function sesionDesdeRespuesta(respuesta) {
+  if (!respuesta || !ROLES.includes(respuesta.rol) || !Number.isFinite(respuesta.exp) || respuesta.exp * 1000 <= Date.now()) return null;
+  if (respuesta.rol === 'deudor' && !CODIGO.test(String(respuesta.codigo))) return null;
+  return Object.freeze({ rol: respuesta.rol, exp: respuesta.exp, ...(respuesta.rol === 'deudor' ? { codigo: respuesta.codigo } : {}) });
 }
 
 export const generarLlave = () => crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
@@ -91,7 +80,7 @@ export function olvidarCredencial(rol) {
 }
 
 export async function recordarCredencial(rol, valor) {
-  if (!ROLES.includes(rol) || validarEntrada(rol, valor)) return false;
+  if (rol !== 'deudor' || validarEntrada(rol, valor)) return false;
   try {
     const exp = Date.now() + VIGENCIA_MS;
     const cifrado = await conTiempo(obtenerLlave().then((llave) => cifrarCon(llave, valor, rol + '|' + exp)));
